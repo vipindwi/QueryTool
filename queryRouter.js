@@ -3,7 +3,7 @@ var router = express.Router()
 
 //define the routes.
 router.get('/', function (request, response){
-	response.send('ADS!');
+	response.render('index.html');
 });
 
 
