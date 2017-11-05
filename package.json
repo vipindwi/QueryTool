@@ -1,0 +1,14 @@
+{
+  "name": "graphgrepsx_visual_query",
+  "version": "1.0.0",
+  "description": "a visual tool for query to graphgrepsx took",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
