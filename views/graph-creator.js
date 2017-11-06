@@ -18,7 +18,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       justScaleTransGraph: false,
       lastKeyDown: -1,
       shiftNodeDrag: false,
-      selectedText: null
+      selectedText: null,
+      buttonIsDraw : false,
     };
 
     // define arrow markers for graph links
@@ -123,10 +124,20 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     });
 
+
+    d3.select("#pointer-drag").on("click", function (){
+      thisGraph.state.buttonIsDraw  = !thisGraph.state.buttonIsDraw;
+      console.log ('buttonIsDraw', thisGraph.state.buttonIsDraw);
+    });
+
+
     // handle delete graph
     d3.select("#delete-graph").on("click", function(){
       thisGraph.deleteGraph(false);
     });
+
+
+
   };
 
   GraphCreator.prototype.setIdCt = function(idct){
@@ -266,8 +277,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         state = thisGraph.state;
     d3.event.stopPropagation();
     state.mouseDownNode = d;
-    if (d3.event.shiftKey){
-      state.shiftNodeDrag = d3.event.shiftKey;
+    if (thisGraph.state.buttonIsDraw){
+      state.shiftNodeDrag = thisGraph.state.buttonIsDraw;
       // reposition dragged directed edge
       thisGraph.dragLine.classed('hidden', false)
         .attr('d', 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + d.y);
@@ -303,7 +314,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           })
           .on("keydown", function(d){
             d3.event.stopPropagation();
-            if (d3.event.keyCode == consts.ENTER_KEY && !d3.event.shiftKey){
+            if (d3.event.keyCode == consts.ENTER_KEY && !thisGraph.state.buttonIsDraw){
               this.blur();
             }
           })
@@ -350,7 +361,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         state.justDragged = false;
       } else{
         // clicked, not dragged
-        if (d3.event.shiftKey){
+        if (thisGraph.state.buttonIsDraw){
           // shift-clicked node: edit text content
           var d3txt = thisGraph.changeTextOfNode(d3node, d);
           var txtNode = d3txt.node();
@@ -387,7 +398,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     if (state.justScaleTransGraph) {
       // dragged not clicked
       state.justScaleTransGraph = false;
-    } else if (state.graphMouseDown && d3.event.shiftKey){
+    } else if (state.graphMouseDown && thisGraph.state.buttonIsDraw){
       // clicked not dragged from svg
       var xycoords = d3.mouse(thisGraph.svgG.node()),
           d = {id: thisGraph.idct++, title: "NEW NODE", x: xycoords[0], y: xycoords[1]};
@@ -533,6 +544,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   };
 
 
+
+
+
+
+
   /**** MAIN ****/
 
   // warn the user when leaving
@@ -573,6 +589,5 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   var graph = new GraphCreator(svg, nodes, edges);
   graph.setIdCt(2);
   graph.updateGraph();
-
 
 })(window.d3, window.saveAs, window.Blob);
