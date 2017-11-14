@@ -121,6 +121,15 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       console.log (graph_data);
 
       //TODO : ajax call to the backend /query/database with the graph_data
+      $.ajax({
+            url: '/query/submitQuery',
+            type: 'post',
+            dataType: 'json',
+            success: function (data) {
+               console.log ('done');
+            },
+            data: JSON.parse(graph_data)
+        });
 
     });
 
